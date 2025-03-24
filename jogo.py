@@ -1,3 +1,5 @@
+import argparse
+
 class Jogo:
     def __init__(self, nome_jogo, nome_pessoa, personagem, vitorias, derrotas, eliminacoes, mortes):
         self.nome_jogo = nome_jogo
@@ -9,6 +11,7 @@ class Jogo:
         self.mortes = mortes
 
     def mostrar_estatisticas(self):
+        print(f"\n🎮 Estatísticas do jogo:")
         print(f"Jogo: {self.nome_jogo}")
         print(f"Nome da pessoa: {self.nome_pessoa}")
         print(f"Personagem: {self.personagem}")
@@ -27,42 +30,36 @@ def salvar_respostas(jogo):
             arquivo.write(f"Derrotas: {jogo.derrotas}\n")
             arquivo.write(f"Eliminações: {jogo.eliminacoes}\n")
             arquivo.write(f"Mortes: {jogo.mortes}\n")
-        print("Respostas salvas com sucesso no arquivo 'estatisticas_jogo.txt'.")
+        print("✅ Respostas salvas no arquivo 'estatisticas_jogo.txt'.")
     except Exception as e:
-        print(f"Erro ao salvar as respostas: {e}")
+        print(f"❌ Erro ao salvar as respostas: {e}")
 
 def main():
-    while True:
-        nome_jogo = input("Digite o nome do jogo: ")
-        nome_pessoa = input("Digite o nome da pessoa: ")
-        personagem = input("Digite o nome do personagem: ")
-        vitorias = int(input("Digite a quantidade de vitórias: "))
-        derrotas = int(input("Digite a quantidade de derrotas: "))
-        eliminacoes = int(input("Digite a quantidade de eliminações: "))
-        mortes = int(input("Digite a quantidade de mortes: "))
+    parser = argparse.ArgumentParser(description="Registrar estatísticas de um jogo")
 
-        jogo = Jogo(nome_jogo, nome_pessoa, personagem, vitorias, derrotas, eliminacoes, mortes)
+    parser.add_argument('--nome_jogo', type=str, required=True, help='Nome do jogo')
+    parser.add_argument('--nome_pessoa', type=str, required=True, help='Nome da pessoa')
+    parser.add_argument('--personagem', type=str, required=True, help='Nome do personagem')
+    parser.add_argument('--vitorias', type=int, required=True, help='Número de vitórias')
+    parser.add_argument('--derrotas', type=int, required=True, help='Número de derrotas')
+    parser.add_argument('--eliminacoes', type=int, required=True, help='Número de eliminações')
+    parser.add_argument('--mortes', type=int, required=True, help='Número de mortes')
 
-        while True:
-            print("\nMenu:")
-            print("1. Mostrar estatísticas do jogo")
-            print("2. Salvar respostas")
-            print("3. Fazer as mesmas perguntas novamente")
-            print("4. Sair")
+    args = parser.parse_args()
 
-            opcao = input("Escolha uma opção: ")
+    jogo = Jogo(
+        args.nome_jogo,
+        args.nome_pessoa,
+        args.personagem,
+        args.vitorias,
+        args.derrotas,
+        args.eliminacoes,
+        args.mortes
+    )
 
-            if opcao == "1":
-                jogo.mostrar_estatisticas()
-            elif opcao == "2":
-                salvar_respostas(jogo)
-            elif opcao == "3":
-                break
-            elif opcao == "4":
-                print("Programa encerrado.")
-                return
-            else:
-                print("Opção inválida. Tente novamente.")
+    jogo.mostrar_estatisticas()
+
+    salvar_respostas(jogo)
 
 if __name__ == "__main__":
     main()
